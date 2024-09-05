@@ -3,7 +3,8 @@ const http = require("http");
 const env = process.env;
 const TelegramBot = require("node-telegram-bot-api");
 const token = env.BOT_TOKEN;
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token);
+const webhookUrl = env.SERVER_URL
 const server = http.createServer((req, res) => {
   // Handle CORS
   res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
@@ -65,6 +66,8 @@ bot.on("message", async (msg) => {
     await bot.sendMessage(chatId, `Unsupported interaction`);
   }
 });
+
+bot.setWebHook(webhookUrl)
 
 server.listen(env.PORT, () => {
   console.log(`Server running at ${env.PORT}th port`);
