@@ -15,7 +15,6 @@ const server = http.createServer((req, res) => {
 });
 
 bot.on("message", async (msg) => {
-    console.log(msg, '- msgggg');
   const chatId = msg.chat.id;
   const text = msg.text;
 
