@@ -100,8 +100,6 @@ bot.on("message", async (msg) => {
     await bot.sendMessage(chatId, `Bot doesn't interact with contacts !`);
   } else if (msg.location) {
     await bot.sendMessage(chatId, `Bot doesn't interact with location !`);
-  } else if (msg.message_id) {
-    await bot.sendMessage(chatId, `Bot doesn't have analysing messages !`);
   } else if (msg.sticker) {
     await bot.sendSticker(chatId, msg.sticker.file_id);
   } else {
