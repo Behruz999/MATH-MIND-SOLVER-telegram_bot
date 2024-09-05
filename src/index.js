@@ -19,20 +19,29 @@ const cors = require("cors");
 // });
 
 //
-app.use(cors());
 // Middleware to parse incoming JSON payloads
 app.use(express.json());
+app.use(cors());
 
-// Define the webhook route
-// app.post(webhookPath, (req, res) => {
-//   try {
-//     bot.processUpdate(req.body);
-//     res.status(200).send("OK");
-//   } catch (error) {
-//     console.error("Error processing update:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+bot
+  .setWebHook(webhookUrl)
+  .then((response) => {
+    console.log("Webhook set response:", response);
+  })
+  .catch((error) => {
+    console.error("Failed to set webhook:", error.message);
+  });
+
+app.post("/webhook", (req, res) => {
+  console.log("Received update:", req.body); // Log incoming updates
+  try {
+    bot.processUpdate(req.body);
+    res.status(200).send("ok");
+  } catch (error) {
+    console.error("Error processing update:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");
@@ -90,18 +99,18 @@ bot.on("message", async (msg) => {
   }
 });
 
-// Set the webhook
-const setWebhook = async () => {
-  try {
-    const response = await bot.setWebHook(webhookUrl);
-    console.log("Webhook set response:", response);
-  } catch (error) {
-    console.error("Failed to set webhook:", error.message);
-  }
-};
-
-setWebhook();
-
 app.listen(env.PORT, () => {
   console.log(`Server running at ${env.PORT}th port`);
 });
+
+// Set the webhook
+// const setWebhook = async () => {
+//   try {
+//     const response = await bot.setWebHook(`${webhookUrl}${env.BOT_TOKEN}`);
+//     console.log("Webhook set response:", response);
+//   } catch (error) {
+//     console.error("Failed to set webhook:", error.message);
+//   }
+// };
+
+// setWebhook();
