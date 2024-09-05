@@ -1,18 +1,41 @@
 require("dotenv").config();
-const http = require("http");
+// const http = require("http");
 const env = process.env;
+const express = require("express");
+const app = express();
 const TelegramBot = require("node-telegram-bot-api");
 const token = env.BOT_TOKEN;
 const bot = new TelegramBot(token);
-const webhookUrl = env.SERVER_URL
-const server = http.createServer((req, res) => {
-  // Handle CORS
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Allowed methods
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allowed headers
-  res.statusCode = 200; // Set HTTP status code to 200 (OK)
-  res.setHeader("Content-Type", "text/plain"); // Set response header
-  res.end("Hello, World!\n"); // Send response
+const webhookUrl = `${env.SERVER_URL}/${env.WEBHOOK_PATH}`;
+const cors = require("cors");
+// const server = http.createServer((req, res) => {
+//   // Handle CORS
+//   res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Allowed methods
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allowed headers
+//   res.statusCode = 200; // Set HTTP status code to 200 (OK)
+//   res.setHeader("Content-Type", "text/plain"); // Set response header
+//   res.end("Hello, World!\n"); // Send response
+// });
+
+//
+app.use(cors());
+// Middleware to parse incoming JSON payloads
+app.use(express.json());
+
+// Define the webhook route
+// app.post(webhookPath, (req, res) => {
+//   try {
+//     bot.processUpdate(req.body);
+//     res.status(200).send("OK");
+//   } catch (error) {
+//     console.error("Error processing update:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
 });
 
 bot.on("message", async (msg) => {
@@ -67,8 +90,18 @@ bot.on("message", async (msg) => {
   }
 });
 
-bot.setWebHook(webhookUrl)
+// Set the webhook
+const setWebhook = async () => {
+  try {
+    const response = await bot.setWebHook(webhookUrl);
+    console.log("Webhook set response:", response);
+  } catch (error) {
+    console.error("Failed to set webhook:", error.message);
+  }
+};
 
-server.listen(env.PORT, () => {
+setWebhook();
+
+app.listen(env.PORT, () => {
   console.log(`Server running at ${env.PORT}th port`);
 });
