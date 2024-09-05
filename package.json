@@ -1,0 +1,22 @@
+{
+  "name": "math-telg",
+  "version": "1.0.0",
+  "description": "math-mind-solver app's telegram server-side",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "math"
+  ],
+  "author": "Behruz",
+  "license": "ISC",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
