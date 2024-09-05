@@ -33,7 +33,7 @@ bot
   });
 
 app.post("/webhook", (req, res) => {
-  console.log("Received update:", req.body); // Log incoming updates
+  // console.log("Received update:", req.body); // Log incoming updates
   try {
     bot.processUpdate(req.body);
     res.status(200).send("ok");
@@ -94,6 +94,16 @@ bot.on("message", async (msg) => {
     await bot.sendMessage(chatId, `Bot doesn't interact with voice messages !`);
   } else if (msg?.video_note) {
     await bot.sendMessage(chatId, `Bot doesn't interact with video messages !`);
+  } else if (msg.audio) {
+    await bot.sendMessage(chatId, `Bot doesn't interact with audio messages !`);
+  } else if (msg.contact) {
+    await bot.sendMessage(chatId, `Bot doesn't interact with contacts !`);
+  } else if (msg.location) {
+    await bot.sendMessage(chatId, `Bot doesn't interact with location !`);
+  } else if (msg.message_id) {
+    await bot.sendMessage(chatId, `Bot doesn't have analysing messages !`);
+  } else if (msg.sticker) {
+    await bot.sendSticker(chatId, msg.sticker.file_id);
   } else {
     await bot.sendMessage(chatId, `Unsupported interaction`);
   }
